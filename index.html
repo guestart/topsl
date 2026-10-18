@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Oracle Pain-Spot Library — 76 Lessons Across 6 Oracle Disciplines</title>
+<meta name="description" content="A 76-lesson problem-solving library for Oracle DBAs and developers. Six disciplines: SQL development, performance & tuning, Oracle-specific features, diagnostics & DevOps, database design & modeling, and application development. 20 lessons free.">
+<style>
+  :root{
+    --bg:#f6f7fb;
+    --ink:#1b2233;
+    --muted:#5b6579;
+    --dim:#8b93a7;
+    --line:#e3e7f0;
+    --card:#ffffff;
+    --brand:#d64533;
+    --brand2:#e8542f;
+    --nav-h:64px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.6;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+  a{color:var(--brand);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  section{scroll-margin-top:calc(var(--nav-h) + 16px)}
+
+  /* ---------- NAV ---------- */
+  .nav{position:sticky;top:0;z-index:60;height:var(--nav-h);background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav .wrap{display:flex;align-items:center;gap:22px;height:100%}
+  .brand{font-weight:800;font-size:16.5px;color:var(--ink);white-space:nowrap}
+  .brand:hover{text-decoration:none}
+  .brand b{color:var(--brand)}
+  .nav-links{display:flex;gap:18px;margin-left:auto;align-items:center}
+  .nav-links a{color:var(--muted);font-size:14px;font-weight:600}
+  .nav-links a:hover{color:var(--ink);text-decoration:none}
+  .btn{display:inline-block;background:linear-gradient(135deg,var(--brand2),var(--brand));color:#fff !important;font-weight:700;font-size:14.5px;padding:11px 22px;border-radius:999px;border:none;cursor:pointer;box-shadow:0 6px 16px rgba(214,69,51,.28)}
+  .btn:hover{transform:translateY(-1px);text-decoration:none}
+  .btn.small{padding:7px 15px;font-size:13px}
+  .btn.ghost{background:transparent;border:1.5px solid rgba(255,255,255,.4);box-shadow:none;color:#fff !important}
+  .btn.ghost:hover{border-color:#fff}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;color:#fff;padding:88px 0 64px;overflow:hidden;
+    background:radial-gradient(1000px 480px at 85% -10%, rgba(214,69,51,.35), transparent 60%),
+               radial-gradient(800px 400px at 0% 20%, rgba(232,84,47,.14), transparent 55%),#10141f}
+  .hero .kicker{display:inline-block;font-size:12px;font-weight:800;letter-spacing:2.5px;color:#ffb4a4;border:1px solid rgba(255,180,164,.4);background:rgba(214,69,51,.12);padding:6px 16px;border-radius:999px;margin-bottom:24px}
+  .hero h1{font-size:clamp(32px,5.2vw,54px);line-height:1.12;margin:0 auto 20px;max-width:880px;font-weight:900;letter-spacing:-.5px}
+  .hero h1 em{font-style:normal;color:#ff9d8a}
+  .hero .sub{max-width:780px;margin:0 auto 32px;color:#c3cadb;font-size:17px}
+  .hero .sub b{color:#fff}
+  .hero .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:880px;margin:52px auto 0}
+  .stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px 10px;text-align:center}
+  .stat b{display:block;font-size:26px;font-weight:900}
+  .stat span{color:#9aa3b8;font-size:12.5px}
+
+  /* ---------- SECTIONS ---------- */
+  .pad{padding:72px 0}
+  .sec-head{max-width:820px;margin-bottom:36px}
+  .sec-head .k{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--brand);text-transform:uppercase}
+  .sec-head h2{font-size:clamp(26px,3.6vw,36px);font-weight:900;margin:8px 0 10px;letter-spacing:-.4px}
+  .sec-head p{color:var(--muted);margin:0;font-size:15.5px}
+  .center{text-align:center}
+  .center .sec-head{margin-left:auto;margin-right:auto}
+
+  /* ---------- DISCIPLINE CARDS ---------- */
+  .disc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px}
+  .disc{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .16s,box-shadow .16s}
+  .disc:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(27,34,51,.10)}
+  .disc .banner{position:relative;height:150px;background:#eef1f7;border-bottom:1px solid var(--line);overflow:hidden}
+  .disc .banner img{width:100%;height:100%;object-fit:cover;display:block}
+  .disc .banner .num{position:absolute;top:12px;left:12px;background:rgba(16,20,31,.85);color:#fff;font-weight:900;font-size:13px;padding:5px 12px;border-radius:999px;letter-spacing:1px}
+  .disc .body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+  .disc h3{margin:0 0 8px;font-size:19px;font-weight:800}
+  .disc h3 .dico{margin-right:8px}
+  .disc .sum{color:var(--muted);font-size:14.5px;flex:1}
+  .disc .meta{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 16px}
+  .tag{font-size:12px;font-weight:700;padding:4px 11px;border-radius:999px;background:#f1f3f8;border:1px solid var(--line);color:var(--muted)}
+  .tag.free{background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.35);color:#15803d}
+  .tag.price{background:rgba(214,69,51,.07);border-color:rgba(214,69,51,.3);color:var(--brand)}
+  .disc .go{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+  .disc .go .pl{font-size:22px;font-weight:900}
+  .disc .go .pl small{font-size:11.5px;color:var(--dim);font-weight:600;display:block}
+  .linklike{font-weight:700;font-size:14px;color:var(--brand)}
+
+  /* ---------- VIDEO PREVIEW INTRODUCTION (cards reuse the .disc styles) ---------- */
+  .pv-thumb{display:block}
+  .pv-thumb:hover{text-decoration:none}
+  .pv .banner img{filter:brightness(.82);transition:filter .2s,transform .35s}
+  .pv:hover .banner img{filter:brightness(1);transform:scale(1.03)}
+  .pv-play{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:rgba(16,20,31,.82);border:3px solid #fff;box-shadow:0 0 30px rgba(214,69,51,.5);transition:transform .2s}
+  .pv-play::before{content:"";position:absolute;left:21px;top:16px;border-left:15px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent}
+  .pv:hover .pv-play{transform:scale(1.08)}
+  .pv-dur{position:absolute;right:12px;bottom:12px;background:rgba(16,20,31,.85);color:#fff;font-size:12px;font-weight:800;letter-spacing:.5px;padding:4px 10px;border-radius:999px}
+
+  /* ---------- FORMATS ---------- */
+  .formats{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+  .fmt{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .fmt .ic{font-size:28px}
+  .fmt h4{margin:10px 0 6px;font-size:16px;font-weight:800}
+  .fmt h4 small{display:block;font-weight:600;color:var(--dim);font-size:12px}
+  .fmt p{margin:0;color:var(--muted);font-size:14px}
+  .fmt-note{margin-top:18px;text-align:center;color:var(--muted);font-size:14.5px}
+  .fmt-note b{color:var(--ink)}
+
+  /* ---------- LIBRARY ---------- */
+  .lib-shell{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .fchip{border:1px solid var(--line);background:#fff;color:var(--muted);font-weight:700;font-size:13.5px;padding:8px 16px;border-radius:999px;cursor:pointer;font-family:inherit;transition:all .13s}
+  .fchip:hover{border-color:var(--dim);color:var(--ink)}
+  .fchip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .fchip.on.free{background:#15803d;border-color:#15803d}
+  .lib-count{color:var(--dim);font-size:13.5px;margin:0 0 16px}
+  .lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+  .lesson{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff;transition:border-color .13s}
+  .lesson:hover{border-color:var(--dim)}
+  .lesson.free{border-left:4px solid #16a34a}
+  .lesson .l-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  .dtag{font-size:11px;font-weight:800;letter-spacing:.4px;padding:3px 10px;border-radius:999px;color:#fff}
+  .lnum{font-size:12px;font-weight:800;color:var(--dim)}
+  .pill{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:1px;padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .pill.free{background:rgba(22,163,74,.1);color:#15803d;border:1px solid rgba(22,163,74,.35)}
+  .pill.lock{background:rgba(214,69,51,.06);color:var(--brand);border:1px solid rgba(214,69,51,.3)}
+  .lesson h4{margin:0 0 4px;font-size:15px;font-weight:700;line-height:1.45}
+  .lesson .unlock{font-size:13px;color:var(--dim)}
+  .chipsr{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .chip{text-decoration:none;font-size:12.5px;font-weight:600;color:#39435a;background:#f2f4f9;border:1px solid var(--line);padding:5px 12px;border-radius:999px;white-space:nowrap;transition:all .12s}
+  .chip:hover{background:#fff;border-color:var(--brand);color:var(--brand);text-decoration:none}
+
+  /* ---------- PATHS ---------- */
+  .paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px}
+  .path{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px 26px}
+  .path .pk{font-size:11.5px;font-weight:800;letter-spacing:1.6px;color:#15803d;text-transform:uppercase}
+  .path h3{margin:8px 0 6px;font-size:19px;font-weight:800}
+  .path > p{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+  .path ol{margin:0;padding:0;list-style:none}
+  .path li{border-top:1px solid var(--line);padding:9px 0;font-size:14px}
+  .path li:first-child{border-top:none;padding-top:0}
+  .path li .pt{font-weight:700}
+  .path li .pc{color:var(--dim);font-size:12px;font-weight:700;margin-left:8px}
+  .path li a{color:var(--ink)}
+  .path li a:hover{color:var(--brand)}
+
+  /* ---------- FREE GRID ---------- */
+  .free-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+  .free-card{background:var(--card);border:1px solid var(--line);border-left:4px solid #16a34a;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;transition:transform .14s,box-shadow .14s}
+  .free-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(27,34,51,.08)}
+  .free-card h4{margin:0;font-size:15px;font-weight:700;line-height:1.45}
+  .free-card h4 .eno{display:block;font-size:11.5px;font-weight:800;color:#15803d;margin-bottom:3px}
+
+  /* ---------- PRICING ---------- */
+  .price-shell{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  table.pt{width:100%;border-collapse:collapse}
+  .pt th{text-align:left;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);padding:16px 20px;border-bottom:1px solid var(--line)}
+  .pt td{padding:15px 20px;border-bottom:1px solid var(--line);font-size:14.5px;vertical-align:middle}
+  .pt tr:last-child td{border-bottom:none}
+  .pt tr.total td{background:#fbf1ef;font-weight:800;font-size:15.5px}
+  .pt .pn{font-weight:800}
+  .pt .pn .dico{margin-right:8px}
+  .pt .pl{font-weight:900;font-size:17px;white-space:nowrap}
+
+  /* ---------- ABOUT ---------- */
+  .about-box{background:#10141f;color:#d7dde9;border-radius:20px;padding:34px 36px;display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+  .about-box .ava{flex:0 0 auto;width:86px;height:86px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(135deg,var(--brand2),#8a2a1e)}
+  .about-box .bio{flex:1;min-width:300px}
+  .about-box .bio p{margin:0 0 12px}
+  .about-box .bio b{color:#fff}
+  .badge-ace{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:800;letter-spacing:1px;color:#ffb4a4;border:1px solid rgba(255,180,164,.45);background:rgba(214,69,51,.15);padding:6px 14px;border-radius:999px}
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:860px;margin:0 auto}
+  .faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;padding:0 22px}
+  .faq summary{cursor:pointer;font-weight:700;font-size:15.5px;padding:16px 0;list-style:none;position:relative;padding-right:34px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";position:absolute;right:4px;top:12px;font-size:20px;color:var(--brand)}
+  .faq details[open] summary::after{content:"–"}
+  .faq .ans{color:var(--muted);font-size:14.5px;padding:0 0 18px}
+  .faq .ans b{color:var(--ink)}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:#10141f;color:#9aa3b8;padding:48px 0 56px;margin-top:20px}
+  footer h4{font-size:13px;letter-spacing:1.6px;font-weight:800;color:#d7dde9;text-transform:uppercase;margin:0 0 14px}
+  .foot-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-bottom:28px}
+  footer ul{list-style:none;margin:0;padding:0}
+  footer li{margin-bottom:9px}
+  footer a{color:#b9c1d4;font-size:14px}
+  footer a:hover{color:#fff}
+  .foot-note{border-top:1px solid rgba(255,255,255,.1);padding-top:20px;font-size:13px;color:#6f7890;max-width:820px}
+
+  /* ---------- SANDBOX NOTICE ---------- */
+  #sandboxBar{position:relative;z-index:70;background:#10141f;color:#ffd7cf;font-size:13px;padding:10px 16px;display:none;gap:10px;align-items:center;justify-content:center;text-align:center;flex-wrap:wrap}
+  #sandboxBar b{color:#fff}
+  #linkToast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:90;max-width:min(92vw,640px);background:#10141f;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 18px 50px rgba(0,0,0,.45);display:none}
+  #linkToast.show{display:block}
+  #linkToast .lt-title{font-size:12.5px;font-weight:800;letter-spacing:1px;color:#ffb4a4;margin-bottom:6px}
+  #linkToast .lt-url{font-size:12.5px;word-break:break-all;color:#c3cadb;margin:0 0 12px;font-family:ui-monospace,Menlo,Consolas,monospace}
+  #linkToast .lt-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn.danger-ghost{background:transparent;border:1px solid rgba(255,255,255,.35);box-shadow:none;color:#fff !important}
+
+  @media (max-width:760px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .nav-links a:not(.btn){display:none}
+    .foot-grid{grid-template-columns:1fr}
+    .hero{padding:64px 0 48px}
+    .about-box{padding:26px 24px}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">📖 The Oracle <b>Pain-Spot</b> Library</a>
+    <nav class="nav-links">
+      <a href="#disciplines">Disciplines</a>
+      <a href="#previews">Previews</a>
+      <a href="#library">Library</a>
+      <a href="#paths">Starter Paths</a>
+      <a href="#free">Free Lessons</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#about">About</a>
+      <a class="btn small" href="#free">Start Free</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <div class="wrap center">
+      <span class="kicker">A PROBLEM-SOLVING CURRICULUM · 6 DISCIPLINES · 76 LESSONS</span>
+      <h1>Every Oracle pain point, <em>elegantly solved.</em></h1>
+      <p class="sub">
+        One library for every real-world Oracle problem you keep hitting in daily DBA work —
+        <b>56 paid lessons</b> and <b>20 free ones</b>, each delivered four ways: video, slide deck,
+        infographic, and podcast app. Built for <b>beginners and intermediate</b> engineers.
+      </p>
+      <div class="ctas">
+        <a class="btn" href="#free">Start Free — 20 Lessons</a>
+        <a class="btn ghost" href="#library">Browse the Library</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>6</b><span>Disciplines</span></div>
+        <div class="stat"><b>76</b><span>Lessons</span></div>
+        <div class="stat"><b>20</b><span>Free Lessons</span></div>
+        <div class="stat"><b>$5–12</b><span>Per Discipline</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DISCIPLINES ============ -->
+  <section class="pad" id="disciplines">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">The Six Disciplines</div>
+        <h2>Oracle mastery isn’t one skill — it’s six.</h2>
+        <p>Each discipline in this library targets a different layer of the same job: writing SQL that holds up,
+        keeping it fast, bending Oracle’s unique features to your will, designing schemas that stay true,
+        keeping production alive, and building applications that survive it all. Start anywhere.</p>
+      </div>
+      <div class="disc-grid" id="discGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ VIDEO PREVIEW INTRODUCTION ============ -->
+  <section class="pad" id="previews" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">Video Preview Introduction</div>
+        <h2>Preview every discipline before you buy.</h2>
+        <p>Six bilingual video previews, one per discipline, each 2–3 minutes long. Each one covers the lesson count,
+        the free lessons, the four formats every lesson ships in, and the price. Cards open the preview in a new tab.</p>
+      </div>
+      <div class="disc-grid" id="pvGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ FORMATS ============ -->
+  <section class="pad" id="formats" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center">
+        <div class="k">How Every Lesson Is Delivered</div>
+        <h2>Four formats. One lesson. Zero friction.</h2>
+        <p>Every single lesson ships in all four formats, so you can learn by watching, reading, glancing, or listening — on any device, offline.</p>
+      </div>
+      <div class="formats">
+        <div class="fmt"><div class="ic">▶️</div><h4>Video<small>.mp4</small></h4><p>A screen-by-screen walkthrough: the incident, the diagnosis, and the fix.</p></div>
+        <div class="fmt"><div class="ic">📄</div><h4>Slide Deck<small>.pdf</small></h4><p>The full argument in slide form — study it, annotate it, or present it to your team.</p></div>
+        <div class="fmt"><div class="ic">🖼️</div><h4>Infographic<small>.png</small></h4><p>One page, one idea. A visual you can pin up, screenshot, or share in chat.</p></div>
+        <div class="fmt"><div class="ic">🎧</div><h4>Podcast App<small>.html + .m4a</small></h4><p>A self-contained player for the same lesson, so the content travels with you.</p></div>
+      </div>
+      <p class="fmt-note">All four arrive together in a single <b>WinRAR .zip</b> — download once, study offline, keep forever.</p>
+    </div>
+  </section>
+
+  <!-- ============ LIBRARY ============ -->
+  <section class="pad" id="library" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">The Lesson Library</div>
+        <h2>All 76 lessons, one catalog.</h2>
+        <p>Filter by discipline, or jump straight to the free tier. Free lessons open their video, slides,
+        infographic, and podcast app directly — no purchase, no sign-up.</p>
+      </div>
+      <div class="lib-shell">
+        <div class="chips" id="libChips"></div>
+        <p class="lib-count" id="libCount"></p>
+        <div class="lib-grid" id="libGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PATHS ============ -->
+  <section class="pad" id="paths" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">Starter Paths</div>
+        <h2>Not sure where to begin? Two proven routes — 100% free.</h2>
+        <p>Curated sequences through the free tier. Finish one, and you’ll know exactly which discipline to pay for.</p>
+      </div>
+      <div class="paths" id="pathGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ FREE ============ -->
+  <section class="pad" id="free" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">The Free Tier</div>
+        <h2>20 free lessons — every discipline covered.</h2>
+        <p>Pick any card and start in seconds. Each free lesson includes all four formats.</p>
+      </div>
+      <div class="free-grid" id="freeGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="pad" id="pricing" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">Pricing</div>
+        <h2>Pay for the discipline you need.</h2>
+        <p>Each discipline is a one-time purchase on Gumroad. Free lessons stay free, forever.</p>
+      </div>
+      <div class="price-shell">
+        <table class="pt">
+          <thead><tr><th>Discipline</th><th>Lessons</th><th>Included free</th><th>Price</th><th></th></tr></thead>
+          <tbody id="priceRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="pad" id="about" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">About the Author</div>
+        <h2>Written by someone who’s sat on the other side of the incident.</h2>
+      </div>
+      <div class="about-box">
+        <div class="ava">‍💻</div>
+        <div class="bio">
+          <p>
+            The author is a <b>Senior Oracle DBA with 12+ years</b> in production environments.
+            He’s published <b>100+ original deep-dive posts</b> on his WordPress blog and regularly
+            contributes SHELL and Oracle SQL to GitHub.
+          </p>
+          <p>
+            Every lesson in this library comes from a <b>real incident, a real tuning win, or a real design
+            mistake</b> — not a certification outline. He publishes them so you don’t have to hit the same
+            walls alone, and he’s still out there talking Oracle with DBAs on both sides of the Pacific.
+          </p>
+          <span class="badge-ace">🏅 ORACLE ACE ALUMNI</span>
+          <p style="margin:14px 0 0"><a href="https://quanwenzhao.gumroad.com" target="_blank" rel="noopener">Gumroad Store ↗</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="pad" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center">
+        <div class="k">FAQ</div>
+        <h2>Quick answers</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>What exactly do I get per lesson?</summary>
+          <div class="ans">Four deliverables in one WinRAR <b>.zip</b>: a video walkthrough (<b>.mp4</b>), a slide deck (<b>.pdf</b>), an at-a-glance infographic (<b>.png</b>), and a self-contained podcast app with audio (<b>.html + .m4a</b>). Download once, study offline, keep forever.</div>
+        </details>
+        <details>
+          <summary>What’s in the free tier?</summary>
+          <div class="ans"><b>20 lessons</b> — at least two from every discipline. Free lessons are not samples with the good parts removed: they’re complete lessons with all four formats, linked directly from this site. No sign-up required.</div>
+        </details>
+        <details>
+          <summary>What level is this for?</summary>
+          <div class="ans"><b>Beginner to intermediate</b> Oracle DBAs and developers. You should be comfortable with basic SQL and the Oracle environment; each lesson explains its own concepts from first principles.</div>
+        </details>
+        <details>
+          <summary>How do I get the paid lessons?</summary>
+          <div class="ans">Pick a discipline and complete the one-time purchase on <b>Gumroad</b> ($5–12 depending on the discipline). You then download that discipline’s lesson zips straight to your machine.</div>
+        </details>
+        <details>
+          <summary>Do I need a running Oracle database to follow along?</summary>
+          <div class="ans">Recommended, not required. A free Oracle Developer Day / Express instance is enough to reproduce the examples. If you can’t spin one up, the slide decks and infographics carry the full argument on their own.</div>
+        </details>
+        <details>
+          <summary>Which Oracle versions do the lessons cover?</summary>
+          <div class="ans">The techniques apply across <b>11gR2 → 19c</b>. Modern syntax shown in the lessons (such as <b>FETCH FIRST</b>) requires 12c+; legacy equivalents are always explained alongside.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>Original Course Sites</h4>
+        <ul id="footSites"></ul>
+      </div>
+      <div>
+        <h4>Buy on Gumroad</h4>
+        <ul id="footGum"></ul>
+      </div>
+    </div>
+    <p class="foot-note">
+      The Oracle Pain-Spot Library is a unified edition of six original course collections on guestart.github.io
+      (SQL Development · Performance &amp; Tuning · Oracle-Specific Features · Diagnostics &amp; DevOps ·
+      Design &amp; Modeling · Application Development). All free media remains hosted on the original sites;
+      paid lessons are delivered after purchase on Gumroad.
+    </p>
+  </div>
+</footer>
+
+<!-- ============ LINK TOAST (sandbox helper) ============ -->
+<div id="linkToast" role="dialog" aria-live="polite">
+  <div class="lt-title">此外部链接在沙箱预览中无法直接打开</div>
+  <p class="lt-url" id="ltUrl"></p>
+  <div class="lt-actions">
+    <button class="btn small" id="ltCopy" type="button">📋 复制链接</button>
+    <button class="btn small danger-ghost" id="ltOpen" type="button">↗ 尝试在新标签页打开</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+const G = "https://guestart.github.io/";
+const COURSES = [
+  {
+    id:"sql", slug:"ESIPSYvEOAOSDlb1erb", ico:"🔀", short:"SQL Dev",
+    name:"Oracle SQL Development", acc:"#2f6df6",
+    sum:"Write SQL that doesn’t crash, lie, or stall. Solve the ROWNUM and Top-N paradoxes, stop legacy joins from bringing databases down, tame implicit conversions, fix CTE sort traps, and make hierarchical queries actually fast.",
+    episodes:17, price:12, freeCount:5,
+    epi:[
+      {n:1,t:"Why Legacy Oracle SQL Joins Crash Databases?",free:1,d:"01.Why-Legacy-Oracle-SQL-Joins-Crash-Databases",video:"Oracle_SQL_Join_Paradox.mp4",slide:"Oracle_SQL_Join_Paradox.pdf",info:"SQL_Join_Syntax_Standards_Comparison.png",pod:"Podcast-Why_Legacy_Oracle_SQL_Joins_Crash_Databases.html"},
+      {n:2,t:"Why Oracle ROWNUM Greater Than One Returns Zero?"},
+      {n:3,t:"Replace ROWNUM With FETCH_FIRST For Speed!"},
+      {n:4,t:"Why Oracle SQL Top-N Queries Fail?",free:1,d:"04.Why-Oracle-SQL-Top-N-Queries-Fail",video:"The_Top-N_Ghost_In_The_Machine.mp4",slide:"The_Oracle_ROWNUM_Paradox.pdf",info:"Database_ROWNUM_Top-N_Query_Paradoxed.png",pod:"Podcast-Why_Oracle_SQL_Top-N_Queries_Fail.html"},
+      {n:5,t:"Why Your SQL Results Keep Shifting?"},
+      {n:6,t:"Why CHAR Columns Kill Oracle Performance?"},
+      {n:7,t:"The Risks of Legacy Oracle Database Types!"},
+      {n:8,t:"Two Missing Quotes Crash Oracle Databases!",free:1,d:"08.Two-Missing-Quotes-Crash-Oracle-Databases",video:"Invisible_Index_Killer.mp4",slide:"Invisible_Index_Killer.pdf",info:"Mastering_SQL_Implicit_Data_Conversions.png",pod:"Podcast-The_Risks_of_Legacy_Oracle_Database_Types.html"},
+      {n:9,t:"Replace Database Triggers With Virtual Columns!"},
+      {n:10,t:"Why Databases Ignore Your Function-Based Index?"},
+      {n:11,t:"Avoiding Cartesian Chaos In Oracle SQL!"},
+      {n:12,t:"Fixing Oracle CTE Sorts With INLINE!",free:1,d:"12.Fixing-Oracle-CTE-Sorts-With-INLINE",video:"Optimizing_Oracle_CTEs.mp4",slide:"Oracle_CTE_Optimization.pdf",info:"SQL_Tuning_Escaping_Sort_Traps.png",pod:"Podcast-Fixing_Oracle_CTE_Sorts_With_INLINE.html"},
+      {n:13,t:"Fixing ORA-30926 Join Key Fan-Out!"},
+      {n:14,t:"Why Order By Destroys Oracle Hierarchies?"},
+      {n:15,t:"Replace Oracle MODEL With Recursive CTEs!"},
+      {n:16,t:"Fixing Oracle LAST_VALUE With Inverse Sorts!"},
+      {n:17,t:"Faster Oracle Hierarchical Queries With START WITH!",free:1,d:"17.Faster-Oracle-Hierarchical-Queries-By-START-WITH",video:"Oracle_Query_Optimization.mp4",slide:"Oracle_Hierarchical_Query_Optimization.pdf",info:"Optimizing_Hierarchical_Database_Queries.png",pod:"Faster_Oracle_Hierarchical_Queries_By_SW.html"}
+    ]
+  },
+  {
+    id:"perf", slug:"ESIPSYvEOAOPaTlb1erb", ico:"⚡", short:"Tuning",
+    name:"Oracle Performance and Tuning", acc:"#ff7849",
+    sum:"Stop taking the optimizer at its word. Decode explain plans, separate access predicates from filter predicates, see through A-Time and cost illusions, understand why hard-coded hints fail, and hunt down the duplicate and invisible indexes that quietly kill performance.",
+    episodes:12, price:8, freeCount:4,
+    epi:[
+      {n:1,t:"The Oracle Explain Plan illusion!",free:1,d:"01.The-Oracle-Explain-Plan-illusion",video:"Oracle_SQL_Performance.mp4",slide:"Oracle_SQL_Performance-Explain_Plan_vs_Display_Cursor.pdf",info:"SQL_Performance_Theory_vs._Reality.png",pod:"Podcast-The_Oracle_Explain_Plan_illusion.html"},
+      {n:2,t:"The Hidden DML Tax of Indexes!"},
+      {n:3,t:"Why Your Oracle Optimizer Is Lying?"},
+      {n:4,t:"Oracle Access versus Filter Predicates!",free:1,d:"04.Oracle-Access-versus-Filter-Predicates",video:"Decoding_SQL_Plans.mp4",slide:"Oracle_Performance_X-Ray.pdf",info:"Database_Access_vs._Filter_Predicates.png",pod:"Podcast-Oracle_Access_versus_Filter_Predicates.html"},
+      {n:5,t:"Why Oracle A-Time Numbers Are Deceiving?"},
+      {n:6,t:"Why Oracle Optimizer Cost Is Total Fantasy?"},
+      {n:7,t:"Why Hard-Coded SQL Hints Fail?"},
+      {n:8,t:"How Duplicate Indexes Kill Oracle Performance?",free:1,d:"08.How-Duplicate-Indexes-Kill-Oracle-Performance",video:"Database_Forensics.mp4",slide:"Oracle_Index_Forensics.pdf",info:"Identifying_And_Hunting_Redundant_Indexes.png",pod:"Podcast-How_Dup_Ind_Kill_Ora_Performance.html"},
+      {n:9,t:"Stop Database Crashes With Invisible Indexes!"},
+      {n:10,t:"Why Index Rebuilding Ruins Database Performance?"},
+      {n:11,t:"Why Your Database Ignores Your Indexes?"},
+      {n:12,t:"Put Equality Columns First In Oracle Indexes!",free:1,d:"12.Put-Equality-Columns-First-In-Oracle-Indexes",video:"Equality_Before_Range.mp4",slide:"Equality_Before_Range.pdf",info:"Database_Indexing_Equality_Before_Range.png",pod:"Podcast-Put_Equality_Columns_First_In_Oracle_Indexes.html"}
+    ]
+  },
+  {
+    id:"feat", slug:"ESIPSYvEOAO-SFlb1erb", ico:"🧬", short:"Features",
+    name:"Oracle-Specific Features", acc:"#9b5cff",
+    sum:"Master the two feature families only Oracle carries this deep: materialized views and virtual columns. MV log metadata mismatches, the commit tax, force-refresh damage, fast refresh from 1200s to 45s, staleness blind spots, ORA-54013, and indexed virtual columns for 200× speed-ups.",
+    episodes:11, price:9, freeCount:2,
+    epi:[
+      {n:1,t:"Fix Oracle MV Log Metadata Mismatches!",free:1,d:"01.Fix-Oracle-MV-Log-Metadata-Mismatches",video:"MV_Log_Evolution.mp4",slide:"Oracle_MV_Log_Evolution.pdf",info:"Database_MV_Log_Evolution_Guide.png",pod:"Podcast-Fix_Oracle_MV_Log_Metadata_Mismatches.html"},
+      {n:2,t:"Eliminating Materialized View Commit Tax!"},
+      {n:3,t:"Why Oracle Force Refresh Kills Performance?"},
+      {n:4,t:"Oracle Fast Refresh 1200 To 45 Seconds!"},
+      {n:5,t:"Silent Corruption After Data Pump Restores!"},
+      {n:6,t:"Why Oracle Ignores Your Materialized Views?",free:1,d:"06.Why-Oracle-Ignores-Your-Materialized-Views",video:"Silent_Performance_Killer.mp4",slide:"Monitoring_Oracle_MV_Staleness.pdf",info:"Materialized_View_Staleness_Performance_Guide.png",pod:"Podca-Why_Oracle_Ignores_Your_Materialized_Views.html"},
+      {n:7,t:"Oracle Function Changes Cause Silent Corruption!"},
+      {n:8,t:"Solving ORA-54013 And Virtual Column Performance!"},
+      {n:9,t:"Oracle Virtual Column Before Trigger Failures!"},
+      {n:10,t:"How Mislabeled DETERMINISTIC Functions Corrupt Indexes?"},
+      {n:11,t:"Index Virtual Columns For 200x Faster Queries!"}
+    ]
+  },
+  {
+    id:"devops", slug:"ESIPSYvEOAODaDOlb7erb", ico:"🩺", short:"DevOps",
+    name:"Oracle Diagnostics and DevOps", acc:"#14b8a6",
+    sum:"Keep production honest and alive: shrink high water marks, expose the lies tables tell about LOB growth, redefine massive tables with zero downtime, avoid row-movement breakage, stop SET UNUSED from leaving data exposed, and unblock ORA-08106 bitmap index rebuilds.",
+    episodes:7, price:5, freeCount:2,
+    epi:[
+      {n:1,t:"Shrinking Oracle High Water Marks!",free:1,d:"01.Shrinking-Oracle-High-Water-Marks",video:"Oracle_Space_Reclamation.mp4",slide:"Oracle_Space_Management_Guide.pdf",info:"Database_Space_Paradox_Guide.png",pod:"Podcast-Shrinking_Oracle_High_Water_Marks.html"},
+      {n:2,t:"Why Oracle Tables Lie About LOB Growth?"},
+      {n:3,t:"The Hidden Cost of Online Redefinition!"},
+      {n:4,t:"Redefining Massive Oracle Tables With Zero Downtime!"},
+      {n:5,t:"Why Oracle Row Movement Breaks Applications?"},
+      {n:6,t:"Oracle SET UNUSED Leaves Data Exposed!"},
+      {n:7,t:"Why ORA-08106 Blocks Online Bitmap Rebuilds?",free:1,d:"07.Why-ORA-08106-Blocks-Online-Bitmap-Rebuilds",video:"Oracle_Bitmap_Indexing.mp4",slide:"Oracle_Bitmap_Index_Guide.pdf",info:"Decoding_Bitmap_Index_Rebuild_Failures.png",pod:"Podcast-Why_ORA-08106_Blocks_Online_Bitmap_Rebuilds.html"}
+    ]
+  },
+  {
+    id:"design", slug:"ESIPSYvEOAODDaMlb1erb", ico:"🏗️", short:"Design",
+    name:"Oracle Database Design and Modeling", acc:"#d99a06",
+    sum:"Architect schemas that hold their truth: the bitmap index paradox, historical data integrity, star schemas for slow dashboards, surrogate vs. natural keys, unique NULLs, unindexed foreign keys, partition pruning traps, and the small tables you should absolutely not partition.",
+    episodes:16, price:12, freeCount:4,
+    epi:[
+      {n:1,t:"The Oracle Bitmap Index Paradox!",free:1,d:"01.The-Oracle-Bitmap-Index-Paradox",video:"The_Bitmap_Index_Paradox.mp4",slide:"The_Bitmap_Index_Paradox.pdf",info:"Database_Bitmap_Index_Performance_Paradox.png",pod:"Podcast-The_Oracle_Bitmap_Index_Paradox.html"},
+      {n:2,t:"Why Databases Secretly Destroy Historical Truth?"},
+      {n:3,t:"Preventing Oracle Fact Table Performance Collapse!"},
+      {n:4,t:"Eliminate Data Drift With Virtual Columns!"},
+      {n:5,t:"Why Star Schemas Fix Slow Dashboards?"},
+      {n:6,t:"Why Surrogate Keys Beat Natural Keys?",free:1,d:"06.Why-Surrogate-Keys-Beat-Natural-Keys",video:"The_Identity_Crisis.mp4",slide:"The_Identity_Crisis_In_Data_Warehousing.pdf",info:"Surrogate_Keys_for_Stable_BI.png",pod:"Podcast-Why_Surrogate_Keys_Beat_Natural_Keys.html"},
+      {n:7,t:"Enforcing Unique NULLs With Oracle NVL!"},
+      {n:8,t:"How Unindexed Foreign Keys Freeze Oracle?"},
+      {n:9,t:"The Oracle ROWID Primary Key Trap!"},
+      {n:10,t:"Mixing CHAR and VARCHAR2 Kills Oracle Performance!"},
+      {n:11,t:"Why TRUNC Breaks Oracle Partition Pruning?",free:1,d:"11.Why-TRUNC-Breaks-Oracle-Partition-Pruning",video:"The_Pruning_Paradox.mp4",slide:"Oracle_Partition_Pruning_Paradox.pdf",info:"Database_Pruning_Paradox_Guide.png",pod:"Podcast-Why_TRUNC_Breaks_Oracle_Partition_Pruning.html"},
+      {n:12,t:"The Oracle Load Date Partitioning Trap!"},
+      {n:13,t:"Update Global Indexes Prevents Oracle Outages!"},
+      {n:14,t:"The Oracle Power Of Two Myth!"},
+      {n:15,t:"Why Partitioned Tables Still Need Indexes?"},
+      {n:16,t:"Stop Partitioning Small Oracle Tables!",free:1,d:"16.Stop-Partitioning-Small-Oracle-Tables",video:"Partitioning_Small_Tables.mp4",slide:"Partitioning_Small_Tables.pdf",info:"Small_Table_Partitioning_Performance_Trap.png",pod:"Podcast-Stop_Partitioning_Small_Oracle_Tab.html"}
+    ]
+  },
+  {
+    id:"appdev", slug:"ESIPSYvEOAOADlb1erb", ico:"🧑‍💻", short:"App Dev",
+    name:"Oracle Application Development", acc:"#ef476f",
+    sum:"Build applications that survive real Oracle: MVCC without NOLOCK hints, the ORA-00060 ghost lock, DDL implicit commits that break rollbacks, JDBC auto-commit traps, ghost data from silent errors, identity column drift, and sequences designed without the million-ID, NOCACHE, and CYCLE traps.",
+    episodes:13, price:10, freeCount:3,
+    epi:[
+      {n:1,t:"Why Oracle Never Needs NOLOCK Hints?",free:1,d:"01.Why-Oracle-Never-Needs-NOLOCK-Hints",video:"The_Oracle_Advantage.mp4",slide:"Oracle_Concurrency_and_MVCC.pdf",info:"Modern_Database_Concurrency_Advantages.png",pod:"Podcast-Why_Oracle_Never_Needs_NOLOCK_Hints.html"},
+      {n:2,t:"The Oracle ORA-00060 Ghost Lock Trap!"},
+      {n:3,t:"Escaping The Table Lock Trap!"},
+      {n:4,t:"SELECT FOR UPDATE Kills Oracle Performance!"},
+      {n:5,t:"Why Oracle DDL Breaks Your Rollbacks?",free:1,d:"05.Why-Oracle-DDL-Breaks-Your-Rollbacks",video:"DDL-Implicit_Commits.mp4",slide:"DDL_in_the_Middle_of_an_Oracle_Transaction.pdf",info:"Managing_DDL_in_Database_Transactions.png",pod:"Podcast-Why_Oracle_DDL_Breaks_Your_Rollbacks.html"},
+      {n:6,t:"The Oracle Statement Level Rollback Trap!"},
+      {n:7,t:"Why JDBC Auto-commit Is A Trap?"},
+      {n:8,t:"Why Silent Database Errors Create Ghost Data?"},
+      {n:9,t:"Fixing Oracle Identity Column Drift!",free:1,d:"09.Fixing-Oracle-Identity-Column-Drift",video:"Oracle_Identity_Sync.mp4",slide:"Oracle_Identity_Column_Synchronization.pdf",info:"Solving_Database_Identity_Column_Gaps.png",pod:"Podcast-Fixing_Oracle_Identity_Column_Drift.html"},
+      {n:10,t:"Why Connection Pools Break CURRVAL?"},
+      {n:11,t:"The Oracle Sequence Million ID Trap!"},
+      {n:12,t:"Oracle NOCACHE Sequences Are a Compliance Placebo!"},
+      {n:13,t:"The Danger of Oracle Sequence Cycling!"}
+    ]
+  }
+];
+
+/* hero banner image per discipline (from the original sites) */
+const BANNERS = {
+  sql:"https://guestart.github.io/ESIPSYvEOAOSDlb1erb/Master-Oracle-SQL-Knowledge-Compendium.png",
+  perf:"https://guestart.github.io/ESIPSYvEOAOPaTlb1erb/TUOSPG-8EKP.png",
+  feat:"https://guestart.github.io/ESIPSYvEOAO-SFlb1erb/OAFKC-MV-VC-I-01_11.png",
+  devops:"https://guestart.github.io/ESIPSYvEOAODaDOlb7erb/TODAsMM-7CLfS%26A.png",
+  design:"https://guestart.github.io/ESIPSYvEOAODDaMlb1erb/ODAI-M10CC-TGKM.png",
+  appdev:"https://guestart.github.io/ESIPSYvEOAOADlb1erb/Mastering-Oracle-Database-7-Critical_Concepts.png"
+};
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const pad2 = n => String(n).padStart(2,"0");
+const byId = id => COURSES.find(c => c.id === id);
+const base = c => G + c.slug + "/";
+const gum  = c => "https://quanwenzhao.gumroad.com/l/" + c.slug;
+const freeList = c => c.epi.filter(e => e.free);
+
+function resChips(c, e){
+  const b = base(c);
+  return '<div class="chipsr">' +
+    '<a class="chip" target="_blank" rel="noopener" href="' + esc(b + e.d + "/" + e.video) + '">▶ Video</a>' +
+    '<a class="chip" target="_blank" rel="noopener" href="' + esc(b + e.d + "/" + e.slide) + '">📄 Slides</a>' +
+    '<a class="chip" target="_blank" rel="noopener" href="' + esc(b + e.d + "/" + e.info) + '">🖼️ Infographic</a>' +
+    '<a class="chip" target="_blank" rel="noopener" href="' + esc(b + e.d + "/" + e.pod) + '">🎧 Podcast</a>' +
+  '</div>';
+}
+
+/* ---------- Discipline cards ---------- */
+function renderDisciplines(){
+  document.getElementById("discGrid").innerHTML = COURSES.map((c,i) => (
+    '<div class="disc">' +
+      '<div class="banner"><img loading="lazy" src="' + esc(BANNERS[c.id]) + '" alt="' + esc(c.name) + '"><span class="num">DISCIPLINE ' + pad2(i+1) + ' / 06</span></div>' +
+      '<div class="body">' +
+        '<h3><span class="dico">' + c.ico + '</span>' + esc(c.name) + '</h3>' +
+        '<div class="sum">' + esc(c.sum) + '</div>' +
+        '<div class="meta">' +
+          '<span class="tag">' + c.episodes + ' lessons</span>' +
+          '<span class="tag free">' + c.freeCount + ' free</span>' +
+          '<span class="tag price">$' + c.price + '</span>' +
+        '</div>' +
+        '<div class="go">' +
+          '<div class="pl">$' + c.price + '<small>one-time · Gumroad</small></div>' +
+          '<a class="linklike" href="#library" onclick="filterLib(\'' + c.id + '\')">Browse lessons →</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  )).join("");
+}
+
+/* ---------- Video Preview Introduction (the six Oracle_*_Trailer.html previews) ---------- */
+const PREVIEWS = [
+  {id:"sql",    file:"Oracle_SQL_Development_Trailer.html",              dur:"2:18"},
+  {id:"perf",   file:"Oracle_Performance_Tuning_Trailer.html",          dur:"2:34"},
+  {id:"feat",   file:"Oracle_Specific_Features_Trailer.html",           dur:"2:11"},
+  {id:"devops", file:"Oracle_Diagnostics_and_DevOps_Trailer.html",      dur:"2:10"},
+  {id:"design", file:"Oracle_Database_Design_and_Modeling_Trailer.html", dur:"2:05"},
+  {id:"appdev", file:"Oracle_Application_Development_Trailer.html",    dur:"2:06"}
+];
+
+function renderPreviews(){
+  document.getElementById("pvGrid").innerHTML = PREVIEWS.map((p,i) => {
+    const c = byId(p.id);
+    const free = freeList(c).map(e => pad2(e.n)).join(" · ");
+    return '<div class="disc pv">' +
+      '<a class="pv-thumb" target="_blank" rel="noopener" href="' + esc(p.file) + '" aria-label="Watch the ' + esc(c.name) + ' video preview">' +
+        '<div class="banner"><img loading="lazy" src="' + esc(BANNERS[c.id]) + '" alt="">' +
+          '<span class="num">PREVIEW ' + pad2(i+1) + ' / 06</span>' +
+          '<span class="pv-play"></span>' +
+          '<span class="pv-dur">▶ ' + esc(p.dur) + '</span>' +
+        '</div>' +
+      '</a>' +
+      '<div class="body">' +
+        '<h3><span class="dico">' + c.ico + '</span>' + esc(c.name) + '</h3>' +
+        '<div class="sum">Introduces all ' + c.episodes + ' lessons in this discipline. Free lessons: ' + free + '.</div>' +
+        '<div class="meta">' +
+          '<span class="tag">' + esc(p.dur) + ' preview</span>' +
+          '<span class="tag">' + c.episodes + ' lessons</span>' +
+          '<span class="tag free">' + c.freeCount + ' free</span>' +
+        '</div>' +
+        '<div class="go">' +
+          '<div class="pl">$' + c.price + '<small>one-time · Gumroad</small></div>' +
+          '<a class="linklike" target="_blank" rel="noopener" href="' + esc(p.file) + '">Watch preview ▶</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+}
+
+/* ---------- Library (unified catalog + filters) ---------- */
+const libState = { disc:null, free:false };
+
+function renderLibChips(){
+  const chips = document.getElementById("libChips");
+  let html = '<button class="fchip' + (!libState.disc && !libState.free ? ' on' : '') + '" data-a="all">All · 76</button>';
+  html += COURSES.map((c,i) =>
+    '<button class="fchip' + (libState.disc === c.id ? ' on' : '') + '" data-a="disc" data-id="' + c.id + '">' +
+      esc(c.ico + ' ' + c.short) + ' · ' + c.episodes + '</button>'
+  ).join("");
+  html += '<button class="fchip free' + (libState.free ? ' on' : '') + '" data-a="free">★ Free only · 20</button>';
+  chips.innerHTML = html;
+  chips.querySelectorAll(".fchip").forEach(b => b.addEventListener("click", () => {
+    const a = b.dataset.a;
+    if (a === "all"){ libState.disc = null; libState.free = false; }
+    else if (a === "free"){ libState.free = !libState.free; }
+    else { libState.disc = (libState.disc === b.dataset.id) ? null : b.dataset.id; }
+    renderLibChips(); renderLibGrid();
+  }));
+}
+
+function libFilter(){
+  return COURSES.flatMap(c => c.epi.map(e => ({c, e})))
+    .filter(({c, e}) => (!libState.disc || c.id === libState.disc) && (!libState.free || e.free));
+}
+
+function renderLibGrid(){
+  const items = libFilter();
+  document.getElementById("libCount").textContent =
+    "Showing " + items.length + " of 76 lessons" +
+    (libState.disc ? " · " + byId(libState.disc).name : "") +
+    (libState.free ? " · free tier" : "");
+  document.getElementById("libGrid").innerHTML = items.map(({c, e}) => {
+    if (e.free){
+      return '<div class="lesson free">' +
+        '<div class="l-top">' +
+          '<span class="dtag" style="background:' + c.acc + '">' + esc(c.ico + ' ' + c.short) + '</span>' +
+          '<span class="lnum">L' + pad2(e.n) + '</span>' +
+          '<span class="pill free">FREE</span>' +
+        '</div>' +
+        '<h4>' + esc(e.t) + '</h4>' +
+        resChips(c, e) +
+      '</div>';
+    }
+    return '<div class="lesson">' +
+      '<div class="l-top">' +
+        '<span class="dtag" style="background:' + c.acc + '">' + esc(c.ico + ' ' + c.short) + '</span>' +
+        '<span class="lnum">L' + pad2(e.n) + '</span>' +
+        '<span class="pill lock">🔒 PAID</span>' +
+      '</div>' +
+      '<h4>' + esc(e.t) + '</h4>' +
+      '<div class="unlock">Unlocked with <b>' + esc(c.name) + '</b> — $' + c.price + ' · <a target="_blank" rel="noopener" href="' + esc(gum(c)) + '">Gumroad ↗</a></div>' +
+    '</div>';
+  }).join("");
+}
+
+function filterLib(id){
+  libState.disc = id; libState.free = false;
+  renderLibChips(); renderLibGrid();
+  document.getElementById("library").scrollIntoView({behavior:"smooth"});
+}
+
+/* ---------- Starter paths ---------- */
+function renderPaths(){
+  const six = COURSES.map(c => ({c, e: c.epi[0]}));  // lesson 01 of each discipline (all free)
+  const rescue = [
+    ["perf",1],["perf",4],["perf",8],["perf",12],
+    ["sql",4],["sql",8],["sql",12],
+    ["feat",6],["design",11],["design",16]
+  ].map(([id,n]) => { const c = byId(id); return {c, e: c.epi.find(x => x.n === n)}; });
+
+  const li = ({c, e}) =>
+    '<li><a target="_blank" rel="noopener" href="' + esc(base(c) + e.d + "/" + e.video) + '">▶ ' + pad2(e.n) + '. ' + esc(e.t) + '</a><span class="pc">' + esc(c.ico + ' ' + c.short) + '</span></li>';
+
+  document.getElementById("pathGrid").innerHTML =
+    '<div class="path">' +
+      '<div class="pk">Path A · 6 lessons · 100% free</div>' +
+      '<h3>The Six Foundations</h3>' +
+      '<p>One free lesson from each discipline — the fastest way to feel the shape of the whole library and find where your next wall is.</p>' +
+      '<ol>' + six.map(li).join("") + '</ol>' +
+    '</div>' +
+    '<div class="path">' +
+      '<div class="pk">Path B · 10 lessons · 100% free</div>' +
+      '<h3>Free Performance Rescue</h3>' +
+      '<p>Everything you need to diagnose a slow query without spending a cent: plans, predicates, index hygiene, Top-N, conversions, CTE sorts, staleness, and pruning.</p>' +
+      '<ol>' + rescue.map(li).join("") + '</ol>' +
+    '</div>';
+}
+
+/* ---------- Free tier grid ---------- */
+function renderFree(){
+  const items = [];
+  COURSES.forEach(c => freeList(c).forEach(e => items.push({c, e})));
+  document.getElementById("freeGrid").innerHTML = items.map(({c, e}) => (
+    '<div class="free-card">' +
+      '<div class="l-top">' +
+        '<span class="dtag" style="background:' + c.acc + '">' + esc(c.ico + ' ' + c.short) + '</span>' +
+        '<span class="lnum">LESSON ' + pad2(e.n) + '</span>' +
+      '</div>' +
+      '<h4><span class="eno">FREE · ALL 4 FORMATS</span>' + esc(e.t) + '</h4>' +
+      resChips(c, e) +
+    '</div>'
+  )).join("");
+}
+
+/* ---------- Pricing ---------- */
+function renderPricing(){
+  document.getElementById("priceRows").innerHTML = COURSES.map((c,i) => (
+    '<tr>' +
+      '<td class="pn"><span class="dico">' + c.ico + '</span>' + esc(c.name) + ' <span style="color:var(--dim);font-weight:600">· Discipline ' + pad2(i+1) + '</span></td>' +
+      '<td>' + c.episodes + '</td>' +
+      '<td>' + c.freeCount + ' of ' + c.episodes + '</td>' +
+      '<td class="pl">$' + c.price + '</td>' +
+      '<td><a class="btn small" target="_blank" rel="noopener" href="' + esc(gum(c)) + '">Buy</a></td>' +
+    '</tr>'
+  )).join("") +
+  '<tr class="total"><td>All six disciplines</td><td>76</td><td>20 included free</td><td class="pl">$56</td><td></td></tr>';
+}
+
+/* ---------- Footer ---------- */
+function renderFooter(){
+  document.getElementById("footSites").innerHTML = COURSES.map(c =>
+    '<li><a target="_blank" rel="noopener" href="' + esc(base(c)) + '">' + esc(c.ico + ' ' + c.name) + ' (' + c.episodes + ' lessons)</a></li>'
+  ).join("");
+  document.getElementById("footGum").innerHTML = COURSES.map(c =>
+    '<li><a target="_blank" rel="noopener" href="' + esc(gum(c)) + '">' + esc(c.name) + ' — $' + c.price + '</a></li>'
+  ).join("");
+}
+
+/* ---------- Init ---------- */
+renderDisciplines();
+renderPreviews();
+renderLibChips();
+renderLibGrid();
+renderPaths();
+renderFree();
+renderPricing();
+renderFooter();
+
+/* ---------- Sandbox preview helpers ---------- */
+let IN_SANDBOX = false;
+try { IN_SANDBOX = window.self !== window.top; } catch (e) { IN_SANDBOX = true; }
+
+if (IN_SANDBOX){
+  const bar = document.getElementById("sandboxBar");
+  bar.style.display = "flex";
+  bar.innerHTML = '🔒 <span><b>沙箱预览模式</b>：此预览窗口会拦截外部链接与外部图片。点击任意外部链接（视频 / 幻灯片 / 播客 / Gumroad）可<b>一键复制网址</b>；或下载本文件后用浏览器打开，全部链接即恢复正常。</span>';
+
+  const toast = document.getElementById("linkToast");
+  const ltUrl = document.getElementById("ltUrl");
+  const ltCopy = document.getElementById("ltCopy");
+  let toastTimer = null;
+
+  function copyText(t){
+    return new Promise(function(res){
+      function fallback(){
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = t;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          res(ok);
+        } catch (e) { res(false); }
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(t).then(function(){ res(true); }, fallback);
+      } else { fallback(); }
+    });
+  }
+
+  ltCopy.addEventListener("click", function(){
+    copyText(ltUrl.textContent).then(function(ok){
+      ltCopy.textContent = ok ? "✓ 已复制" : "复制失败，请手动选择网址";
+    });
+  });
+  document.getElementById("ltOpen").addEventListener("click", function(){
+    try { window.open(ltUrl.textContent, "_blank", "noopener"); } catch (e) { /* blocked in sandbox */ }
+  });
+
+  document.addEventListener("click", function(ev){
+    const t = ev.target;
+    const a = (t && t.closest) ? t.closest("a") : null;
+    if (!a) return;
+    const href = a.getAttribute("href") || "";
+    if (!/^https?:\/\//i.test(href)) return; // external links only; in-page anchors are untouched
+    ev.preventDefault();
+    ltUrl.textContent = href;
+    ltCopy.textContent = "📋 复制链接";
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 15000);
+  }, true);
+}
+
+/* image fallback for offline / sandbox preview */
+const FALLBACK_IMG = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="150"><rect width="100%" height="100%" fill="#eef1f7"/><text x="50%" y="50%" font-family="Arial" font-size="13" fill="#8b93a7" text-anchor="middle" dominant-baseline="middle">Course image hosted on guestart.github.io (unavailable offline)</text></svg>');
+document.querySelectorAll(".banner img").forEach(function(im){
+  im.addEventListener("error", function(){
+    if (!im.dataset.fb){ im.dataset.fb = "1"; im.src = FALLBACK_IMG; }
+  });
+});
+</script>
+</body>
+</html>
